@@ -1,23 +1,42 @@
 <x-app-layout>
 
-    @foreach ($orders as $order)
-        @foreach ($order->checkouts as $checkout)
+    <div class="max-w-5xl mx-auto mt-10 px-6">
 
-            <a href="{{ route('orders.show', $order->id) }}"
-                class="block"
-            >
+        @forelse ($orders as $order)
 
-            <img
-                src="{{ asset('images/' . $checkout->material->material_image) }}"
-                alt="{{ $checkout->material->material_name }} の画像"
-                class="w-full h-36 object-cover rounded-lg bg-[#F7F9FA]"
-            >
+            @foreach ($order->checkouts as $checkout)
 
-            {{ $checkout->material->material_name }}
+                <a href="{{ route('orders.show', $order->id) }}"
+                   class="block mb-6">
 
-            </a>
+                    <div class="bg-white shadow rounded-2xl overflow-hidden hover:shadow-md transition">
 
-        @endforeach
-    @endforeach
+                        <img
+                            src="{{ asset('images/' . $checkout->material->material_image) }}"
+                            alt="{{ $checkout->material->material_name }}"
+                            class="w-full h-48 object-cover bg-[#F7F9FA]"
+                        >
+
+                        <div class="p-4">
+                            <p class="font-semibold text-lg">
+                                {{ $checkout->material->material_name }}
+                            </p>
+                        </div>
+
+                    </div>
+
+                </a>
+
+            @endforeach
+
+        @empty
+
+            <p class="text-center text-gray-500 mt-10">
+                購入済みの商品がありません
+            </p>
+
+        @endforelse
+
+    </div>
 
 </x-app-layout>

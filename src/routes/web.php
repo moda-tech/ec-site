@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/dashboard', [OrderController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('orders.index');
 
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('admin.dashboard');
+    });
+
 //購入済み商品詳細ページ
 Route::get('/dashboard/orders/{order}',[OrderController::class, 'show'])
     ->middleware(['auth', 'verified'])->name('orders.show');
@@ -49,6 +57,91 @@ Route::middleware('auth')->group(function () {
         [CheckoutController::class, 'result']
     )->name('checkout.result');
 });
+
+
+
+use App\Http\Controllers\Admin\MaterialController as AdminMaterialController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\UserController;
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        // ダッシュボード
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+
+        /*
+        |--------------------------------------------------------------------------
+        | 商品管理（materials）
+        |--------------------------------------------------------------------------
+        */
+
+        // 一覧
+        Route::get('/materials', [AdminMaterialController::class, 'index'])
+            ->name('materials.index');
+
+        // 新規作成画面
+        Route::get('/materials/create', [AdminMaterialController::class, 'create'])
+            ->name('materials.create');
+
+        // 新規作成処理
+        Route::post('/materials', [AdminMaterialController::class, 'store'])
+            ->name('materials.store');
+
+        // 編集画面
+        Route::get('/materials/{slug}/edit', [AdminMaterialController::class, 'edit'])
+            ->name('materials.edit');
+
+        // 更新処理
+        Route::put('/materials/{slug}', [AdminMaterialController::class, 'update'])
+            ->name('materials.update');
+
+        // 削除
+        Route::delete('/materials/{slug}', [AdminMaterialController::class, 'destroy'])
+            ->name('materials.destroy');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 注文管理（orders）
+        |--------------------------------------------------------------------------
+        */
+
+        // 一覧
+        Route::get('/orders', [AdminOrderController::class, 'index'])
+            ->name('orders.index');
+
+        // 詳細
+        Route::get('/orders/{id}', [AdminOrderController::class, 'show'])
+            ->name('orders.show');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ユーザー管理（users）
+        |--------------------------------------------------------------------------
+        */
+
+        // 一覧
+        Route::get('/users', [UserController::class, 'index'])
+            ->name('users.index');
+
+        // 編集画面
+        Route::get('/users/{id}/edit', [UserController::class, 'edit'])
+            ->name('users.edit');
+
+        // 更新
+        Route::put('/users/{id}', [UserController::class, 'update'])
+            ->name('users.update');
+
+        // 削除
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])
+            ->name('users.destroy');
+    });
 
 
 

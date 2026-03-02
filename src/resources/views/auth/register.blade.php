@@ -1,52 +1,79 @@
 <x-guest-layout>
+
+    <h2 class="text-xl font-bold text-center mt-10 mb-6">
+        新規登録
+    </h2>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+        {{-- 名前 --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">名前</label>
+            <input
+                type="text"
+                name="name"
+                value="{{ old('name') }}"
+                class="w-full border rounded px-3 py-2"
+                required
+                autofocus
+            >
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+        {{-- メール --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">メール</label>
+            <input
+                type="email"
+                name="email"
+                value="{{ old('email') }}"
+                class="w-full border rounded px-3 py-2"
+                required
+            >
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
+        {{-- パスワード --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">パスワード</label>
+            <input
+                type="password"
+                name="password"
+                class="w-full border rounded px-3 py-2"
+                required
+            >
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
+        {{-- 確認 --}}
+        <div class="mb-6">
+            <label class="block font-semibold mb-1">パスワード確認</label>
+            <input
+                type="password"
+                name="password_confirmation"
+                class="w-full border rounded px-3 py-2"
+                required
+            >
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        {{-- ボタン --}}
+        <button
+            type="submit"
+            class="w-full bg-[#80B5B9] text-white py-2 rounded hover:opacity-80"
+        >
+            登録する
+        </button>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        {{-- ログインリンク --}}
+        <div class="mt-4 text-center">
+            <a href="{{ route('login') }}"
+               class="text-sm text-gray-600 hover:text-gray-900 underline">
+                すでにアカウントをお持ちの方はこちら
+            </a>
         </div>
+
     </form>
+
 </x-guest-layout>

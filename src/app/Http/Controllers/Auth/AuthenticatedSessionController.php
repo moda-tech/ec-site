@@ -28,6 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // 管理者なら
+        if (Auth::user()->is_admin) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // 一般ユーザー
         return redirect()->intended(route('orders.index', absolute: false));
     }
 
@@ -42,6 +48,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('login');
     }
 }

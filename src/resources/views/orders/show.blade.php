@@ -14,23 +14,24 @@
 
             @foreach ($order->checkouts as $checkout)
 
-            <div class="mb-6">
+            <div class="mb-10 text-center max-w-2xl mx-auto">
 
-            <p class="font-semibold">
+            <h2 class="text-2xl font-bold mb-4">
                 {{ $checkout->material->material_name }}
-            </p>
+            </h2>
 
-            <p>
+            <p class="text-gray-700 leading-relaxed mb-4">
                 {{ $checkout->material->material_overview }}
             </p>
 
-            <p class="text-gray-500 text-sm">
+            <p class="text-gray-400 text-sm">
                 ※ ポートフォリオ用デモのため本文は省略しています。
             </p>
 
-    </div>
+            </div>
 
-@endforeach
+            @endforeach
+
             
 
 
