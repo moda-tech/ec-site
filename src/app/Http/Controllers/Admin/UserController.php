@@ -8,6 +8,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    //管理者側 ユーザー一覧
     public function index()
     {
         $users = User::orderBy('created_at', 'desc')->paginate(30);
@@ -15,6 +16,7 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    //管理者側 ユーザー編集
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -22,6 +24,7 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
+    //管理者側 ユーザー編集 更新
     public function update(Request $request, $id)
     {
         // 対象ユーザー取得
@@ -41,6 +44,7 @@ class UserController extends Controller
             ->with('success', 'ユーザー情報を更新しました');
     }
 
+    //管理者側 ユーザー削除
     public function destroy($id)
     {
         $user = User::findOrFail($id);

@@ -9,6 +9,7 @@ use App\Models\Checkout;
 
 class OrderController extends Controller
 {
+    //管理者側 注文一覧 表示
      public function index()
     {
          $orders = Order::with('checkouts')
@@ -18,6 +19,7 @@ class OrderController extends Controller
         return view('admin.orders.index', compact('orders'));
     }
 
+    //管理者側 注文一覧 詳細
     public function show($id)
     {
         $order = Order::with('checkouts')->findOrFail($id);

@@ -10,7 +10,7 @@ use App\Models\Material;
 class MaterialController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 管理者側 商品一覧
      */
     public function index()
     {
@@ -20,7 +20,7 @@ class MaterialController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 管理者側 商品新規作成
      */
     public function create()
     {
@@ -28,7 +28,7 @@ class MaterialController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 管理者側 商品新規作成 処理
      */
     public function store(Request $request)
     {
@@ -63,17 +63,7 @@ class MaterialController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show($slug)
-    {
-        $materials = Material::where('slug', $slug)->firstOrFail();
-
-        return view('admin.materials.show', compact('materials'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * 管理者側 商品編集
      */
     public function edit($slug)
     {
@@ -83,7 +73,7 @@ class MaterialController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 管理者側 商品更新
      */
     public function update(Request $request, string $slug)
     {
@@ -122,7 +112,7 @@ class MaterialController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * 管理者側 商品削除
      */
     public function destroy($id)
     {
