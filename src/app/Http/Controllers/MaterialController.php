@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class MaterialController extends Controller
 {
-    // 一覧表示
+    // 商品一覧表示
     public function index()
     {
         $materials = Material::orderBy('created_at', 'desc')->paginate(18);
@@ -27,6 +27,7 @@ class MaterialController extends Controller
 
     }
 
+    //　商品詳細表示
     public function show($slug)
     {
         $materials = Material::where('slug', $slug)->firstOrFail();

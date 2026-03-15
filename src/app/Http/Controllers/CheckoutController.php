@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
+    //購入内容の確認
     public function show($slug)
     {
         $materials = Material::where('slug', $slug)->firstOrFail();
@@ -19,26 +20,27 @@ class CheckoutController extends Controller
         return view('checkouts.show', compact('materials'));
     }
 
+    //購入処理
     public function confirm($slug)
     {
         $material = Material::where('slug', $slug)->firstOrFail();
 
-            $alreadyPurchased = Checkout::where('material_id', $material->id)
+           try {
+
+                DB::beginTransaction();
+
+                $alreadyPurchased = Checkout::where('material_id', $material->id)
                     ->whereHas('order', function ($query) {
                         $query->where('user_id', Auth::id())
                             ->where('status', 'completed');
                     })
                     ->exists();
 
-            if ($alreadyPurchased) {
-                return redirect()
-                    ->back()
-                    ->with('error', 'この商品はすでに購入済みです');
-            }
+                if ($alreadyPurchased) {
+                    throw new \Exception('already purchased');
+                }
 
-
-            DB::transaction(function () use ($material) {
-               // ① order作成
+                // order作成
                 $order = Order::create([
                     'user_id' => Auth::id(),
                     'total_price' => $material->material_price,
@@ -47,7 +49,7 @@ class CheckoutController extends Controller
 
                 $quantity = 1;
 
-                // ② checkout作成
+                // checkout作成
                 Checkout::create([
                     'order_id'   => $order->id,
                     'material_id'=> $material->id,
@@ -55,24 +57,30 @@ class CheckoutController extends Controller
                     'price'      => $material->material_price,
                     'subtotal'   => $material->material_price * $quantity,
                 ]);
-        
-                sleep(1);
 
-                $lockedOrder = Order::lockForUpdate()->find($order->id);
+                //DB側でcheckoutテーブルのuser_idとmaterial_idの組み合わせにユニーク制約をかけることで
+                //同時リクエストによる二重Insertを防止しています
 
-                if ($lockedOrder->status === 'completed') {
-                    return;
-                }
+                DB::commit();
 
-                $lockedOrder->status = 'completed';
-                $lockedOrder->save();
-            });
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                \Log::error($e->getMessage());
+
+                return redirect()
+                    ->back()
+                    ->with('error', '購入処理に失敗しました');
+            }
+
 
             return redirect()
                 ->route('checkout.result')
                 ->with('success', '決済が完了しました');
     }
 
+    //購入完了
     public function result()
     {
         return view('checkouts.result');

@@ -7,17 +7,26 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
-//マイページ
+// ==============================
+// マイページ
+// ==============================
+
+//ユーザーマイページ
 Route::get('/dashboard', [OrderController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('orders.index');
 
+//管理者マイページ
 Route::middleware(['auth', 'admin'])
-    ->prefix('admin')
+    ->prefix('admin') //URLの頭に /admin を追加
     ->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('admin.dashboard');
     });
+
+// ==============================
+// 購入済み商品閲覧
+// ==============================
 
 //購入済み商品詳細ページ
 Route::get('/dashboard/orders/{order}',[OrderController::class, 'show'])
@@ -30,6 +39,10 @@ Route::middleware('auth')->group(function () {
     });
 
 require __DIR__.'/auth.php';
+
+// ==============================
+// 商品購入
+// ==============================
 
 //商品一覧画面(メインページ)
 Route::get('/products', [MaterialController::class, 'index'])->name('material.index');
@@ -58,7 +71,9 @@ Route::middleware('auth')->group(function () {
     )->name('checkout.result');
 });
 
-
+// ==============================
+// 管理者画面
+// ==============================
 
 use App\Http\Controllers\Admin\MaterialController as AdminMaterialController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -74,11 +89,9 @@ Route::middleware(['auth', 'admin'])
             return view('admin.dashboard');
         })->name('dashboard');
 
-        /*
-        |--------------------------------------------------------------------------
-        | 商品管理（materials）
-        |--------------------------------------------------------------------------
-        */
+        // ==============================
+        //商品管理（materials）
+        // ==============================
 
         // 一覧
         Route::get('/materials', [AdminMaterialController::class, 'index'])
@@ -104,12 +117,9 @@ Route::middleware(['auth', 'admin'])
         Route::delete('/materials/{slug}', [AdminMaterialController::class, 'destroy'])
             ->name('materials.destroy');
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | 注文管理（orders）
-        |--------------------------------------------------------------------------
-        */
+        // ==============================
+        //注文管理（orders）
+        // ==============================
 
         // 一覧
         Route::get('/orders', [AdminOrderController::class, 'index'])
@@ -119,12 +129,9 @@ Route::middleware(['auth', 'admin'])
         Route::get('/orders/{id}', [AdminOrderController::class, 'show'])
             ->name('orders.show');
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | ユーザー管理（users）
-        |--------------------------------------------------------------------------
-        */
+        // ==============================
+        //ユーザー管理（users）
+        // ==============================
 
         // 一覧
         Route::get('/users', [UserController::class, 'index'])

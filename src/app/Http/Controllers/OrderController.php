@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-      public function index()
+    //ユーザーマイページ
+    public function index()
     {
         $orders = Order::with('checkouts.material')
         ->where('user_id', Auth::id())
@@ -21,7 +22,7 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
 
     }
-
+    //購入済み商品閲覧ページ
     public function show(Order $order)
     {
         $order->load('checkouts.material');
