@@ -33,8 +33,9 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
 
-CMD php artisan key:generate --force \
+CMD php -r "file_exists('/var/www/.env') || copy('/var/www/.env.example', '/var/www/.env');" \
+    && php artisan key:generate --force \
     && php artisan config:cache \
     && php artisan migrate --force \
-    && service nginx start \
-    && php-fpm
+    && php-fpm -D \
+    && nginx -g "daemon off;"
