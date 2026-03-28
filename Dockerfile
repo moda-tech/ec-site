@@ -29,10 +29,12 @@ RUN npm run build
 
 # Laravel権限
 RUN chown -R www-data:www-data storage bootstrap/cache
-
-# キャッシュ最適化
-RUN php artisan config:cache
+RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
 
-CMD service nginx start && php-fpm
+CMD php artisan key:generate --force \
+    && php artisan config:cache \
+    && php artisan migrate --force \
+    && service nginx start \
+    && php-fpm
