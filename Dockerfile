@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
+    supervisor \
     && docker-php-ext-install pdo_pgsql pgsql
 
 # composer
@@ -31,11 +32,13 @@ RUN npm run build
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
+# supervisord設定コピーを追加
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 EXPOSE 80
 
 CMD php -r "file_exists('/var/www/.env') || copy('/var/www/.env.example', '/var/www/.env');" \
     && php artisan key:generate --force \
     && php artisan config:cache \
     && php artisan migrate --force \
-    && php-fpm -D \
-    && nginx -g "daemon off;"
+    && supervisord -c /etc/supervisor/conf.d/supervisord.conf
