@@ -21,6 +21,9 @@ COPY ./src .
 # nginx設定コピー
 COPY ./docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
+# ↓これを追加
+RUN rm -f /etc/nginx/sites-enabled/default
+
 # composer install
 RUN composer install --no-dev --optimize-autoloader
 
