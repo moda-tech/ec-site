@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Route;
 // マイページ
 // ==============================
 
+//リダイレクト
+Route::get('/', function () {
+    return redirect()->route('material.index');
+});
+
 //ユーザーマイページ
 Route::get('/dashboard', [OrderController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('orders.index');
